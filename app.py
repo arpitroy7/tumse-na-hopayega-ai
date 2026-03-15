@@ -1,13 +1,10 @@
 import os
 import streamlit as st
 from groq import Groq
-from dotenv import load_dotenv
-
-# Load API key
-load_dotenv()
+api_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
 
 client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=api_key
 )
 
 st.title("Beta Tumse Nahi Hoga AI")
