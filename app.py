@@ -29,11 +29,12 @@ if "messages" not in st.session_state:
 
 # Display previous messages
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+    if message["role"] != "system":  
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
 
 # Chat input
-prompt = st.chat_input("Ask something...")
+prompt = st.chat_input("Pucho pucho... Sharma ji ka beta to aise sawaal nahi puchta.")
 
 if prompt:
 
