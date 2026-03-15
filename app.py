@@ -1,8 +1,14 @@
-import os
 import streamlit as st
 from groq import Groq
 
+# Page configuration
+st.set_page_config(
+    page_title="Beta Tumse Nahi Hoga AI",
+    page_icon="🤦‍♀️",
+    layout="centered"
+)
 
+# Load API key from Streamlit secrets
 if "GROQ_API_KEY" not in st.secrets:
     st.error("GROQ_API_KEY is missing in Streamlit Secrets.")
     st.stop()
@@ -10,9 +16,29 @@ if "GROQ_API_KEY" not in st.secrets:
 api_key = st.secrets["GROQ_API_KEY"]
 
 client = Groq(api_key=api_key)
-st.title("Beta Tumse Nahi Hoga AI")
 
-# Store chat history
+# Title section
+st.title("🤦‍♀️ Beta Tumse Nahi Hoga AI")
+st.caption("⚠️ Warning: Yeh AI tumhari self-esteem destroy kar sakta hai.")
+
+st.info("Haan beta... padhai chhod ke AI se baat karne aaye ho? Pucho kya puchna hai.")
+
+# Clear chat button
+if st.button("🧹 Clear Chat"):
+    st.session_state.messages = [
+        {
+            "role": "system",
+            "content": """You are a brutally sarcastic Indian mom chatbot.
+            You answer questions correctly but also roast the user.
+            You constantly mock their laziness, bad habits, procrastination, and poor life choices.
+            You often compare them to 'Sharma ji ka beta'.
+            Your tone should be sarcastic, slightly demotivating, and very funny.
+            Keep responses short and witty."""
+        }
+    ]
+    st.rerun()
+
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -25,11 +51,10 @@ if "messages" not in st.session_state:
             Keep responses short and witty."""
         }
     ]
-        
 
-# Display previous messages
+# Display chat history (hide system prompt)
 for message in st.session_state.messages:
-    if message["role"] != "system":  
+    if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
@@ -38,13 +63,15 @@ prompt = st.chat_input("Pucho pucho... Sharma ji ka beta to aise sawaal nahi puc
 
 if prompt:
 
-    st.chat_message("user").write(prompt)
+    with st.chat_message("user"):
+        st.write(prompt)
 
     st.session_state.messages.append({
         "role": "user",
         "content": prompt
     })
 
+    # Call Groq API
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=st.session_state.messages
@@ -59,3 +86,7 @@ if prompt:
         "role": "assistant",
         "content": reply
     })
+
+# Footer
+st.divider()
+st.caption("Made for log jinko Sharma ji ka beta complex hai.")
