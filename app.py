@@ -1,17 +1,15 @@
 import os
 import streamlit as st
 from groq import Groq
-from dotenv import load_dotenv
 
 
-load_dotenv()
+if "GROQ_API_KEY" not in st.secrets:
+    st.error("GROQ_API_KEY is missing in Streamlit Secrets.")
+    st.stop()
 
+api_key = st.secrets["GROQ_API_KEY"]
 
-api_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
-
-client = Groq(
-    api_key=api_key
-)
+client = Groq(api_key=api_key)
 st.title("Beta Tumse Nahi Hoga AI")
 
 # Store chat history
